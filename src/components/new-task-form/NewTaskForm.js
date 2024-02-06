@@ -19,7 +19,7 @@ export default class NewTaskForm extends Component {
     };
 
     return (
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className='new-todo-form"'>
         <input
           className="new-todo"
           placeholder="What needs to be done?"
