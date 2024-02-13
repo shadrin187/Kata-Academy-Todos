@@ -1,8 +1,16 @@
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+
 import Task from '../task/Task';
 import './TaskList.css';
 
-function TaskList({ tasksData, onDeleteTask, onTaskChange, onEditingTask }) {
+function TaskList({
+  tasksData,
+  onDeleteTask,
+  onTaskChange,
+  onEditingTask,
+  startTimer,
+  pauseTimer,
+}) {
   const elements = tasksData.map((item) => {
     return (
       <Task
@@ -11,9 +19,11 @@ function TaskList({ tasksData, onDeleteTask, onTaskChange, onEditingTask }) {
         onDeleteTask={onDeleteTask}
         onTaskChange={onTaskChange}
         onEditingTask={onEditingTask}
+        pauseTimer={() => pauseTimer(item.id)}
+        startTimer={() => startTimer(item.id)}
       />
     );
-  });
+  })
 
   return <ul className="todo-list">{elements}</ul>;
 }
@@ -23,6 +33,8 @@ TaskList.propTypes = {
   onTaskChange: PropTypes.func.isRequired,
   onEditingTask: PropTypes.func.isRequired,
   onDeleteTask: PropTypes.func.isRequired,
+  startTimer: PropTypes.func.isRequired,
+  pauseTimer: PropTypes.func.isRequired,
 };
 
 TaskList.defaultProps = {

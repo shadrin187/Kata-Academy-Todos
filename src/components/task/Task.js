@@ -18,11 +18,19 @@ class Task extends Component {
     onEditingTask(id, this.state.value);
     this.setState({ value: '' });
     this.setState({ editing: false });
-  };
+  }
 
   render() {
-    const { item, onDeleteTask, onTaskChange } = this.props;
-    const { id, description, checked, date } = item;
+    const { item, onDeleteTask, onTaskChange, startTimer, pauseTimer } =
+      this.props
+    const { id, description, checked, date, minutes, seconds } = item;
+
+    let timer = `${minutes}:`
+    if (String(seconds).length === 1) {
+      timer += `0${seconds}`
+    } else {
+      timer += seconds
+    }
 
     return (
       <li
@@ -39,8 +47,29 @@ class Task extends Component {
             onChange={(e) => onTaskChange(id, e.target.checked)}
           />
           <label htmlFor={id}>
-            <span className="description">{description}</span>
-            <span className="created">
+            <span className="title">{description}</span>
+
+            <span className="description">
+              <button
+                className="icon icon-play"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  startTimer()
+                }}
+                id={id}
+              />
+              <button
+                className="icon icon-pause"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  pauseTimer()
+                }}
+                id={id}
+              />
+              {timer}
+            </span>
+
+            <span className="description">
               {`created ${formatDistanceToNow(date, {
                 includeSeconds: true,
                 addSuffix: true,
@@ -82,10 +111,14 @@ Task.propTypes = {
     description: PropTypes.string,
     checked: PropTypes.bool,
     date: PropTypes.instanceOf(Date),
+    minutes: PropTypes.number,
+    seconds: PropTypes.number,
   }),
   onDeleteTask: PropTypes.func.isRequired,
   onTaskChange: PropTypes.func.isRequired,
   onEditingTask: PropTypes.func.isRequired,
+  startTimer: PropTypes.func.isRequired,
+  pauseTimer: PropTypes.func.isRequired,
 };
 
 Task.defaultProps = {

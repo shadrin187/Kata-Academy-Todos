@@ -1,6 +1,7 @@
-import PropTypes from "prop-types";
-import TasksFilter from "../tasks-filter/TasksFilter";
-import "./Footer.css";
+import PropTypes from 'prop-types'
+
+import TasksFilter from '../tasks-filter/TasksFilter'
+import './Footer.css'
 
 function Footer({
   onClearCompleted,
@@ -15,9 +16,7 @@ function Footer({
         changeFilterStatus={changeFilterStatus}
         filterStatus={filterStatus}
       />
-      <button className="clear-completed" 
-      onClick={onClearCompleted}
-      >
+      <button className="clear-completed" onClick={onClearCompleted}>
         Clear completed
       </button>
     </footer>
@@ -32,7 +31,7 @@ Footer.propTypes = {
 };
 
 Footer.defaultProps = {
-  filterStatus: "All",
+  filterStatus: 'All',
 };
 
 export default Footer;

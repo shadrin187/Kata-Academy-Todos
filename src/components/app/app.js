@@ -10,17 +10,28 @@ export default class App extends Component {
   state = {
     tasksData: [],
     filterStatus: 'All',
-  };
+  }
 
-  onAddTask = (value) => {
+  componentDidMount() {
+    this.timer = setInterval(this.updateTimers, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+  onAddTask = (value, minutes, seconds) => {
     const task = {
       id: nanoid(),
       description: value,
       checked: false,
       date: new Date(),
+      minutes: Number(minutes),
+      seconds: Number(seconds),
+      isPaused: false,
     };
     this.setState(({ tasksData }) => ({
-        tasksData: [...tasksData, task] 
+      tasksData: [...tasksData, task],
     }));
   };
 
@@ -74,6 +85,44 @@ export default class App extends Component {
     });
   };
 
+  updateTimers = () => {
+    this.setState({
+      tasksData: this.state.tasksData.map((el) => {
+        let time = el.minutes * 60 + el.seconds;
+        if (!el.isPaused) {
+          time += 1;
+        }
+        el.minutes = Math.floor(time / 60);
+        el.seconds = time % 60;
+        return el;
+      }),
+    });
+  };
+
+  pauseTimer = (id) => {
+    this.setState(({ tasksData }) => {
+      tasksData.map((el) => {
+        if (el.id === id) {
+          el.isPaused = true;
+        }
+        return el;
+      });
+      // return { tasksData: newArray };
+    });
+  };
+
+  startTimer = (id) => {
+    this.setState(({ tasksData }) => {
+      tasksData.map((el) => {
+        if (el.id === id) {
+          el.isPaused = false;
+        }
+        return el;
+      });
+      // return { tasksData: newArray };
+    });
+  };
+
   render() {
     const { tasksData } = this.state;
 
@@ -91,6 +140,8 @@ export default class App extends Component {
             onDeleteTask={this.onDeleteTask}
             onTaskChange={this.onTaskChange}
             onEditingTask={this.onEditingTask}
+            pauseTimer={this.pauseTimer}
+            startTimer={this.startTimer}
           />
           <Footer
             changeFilterStatus={this.changeFilterStatus}

@@ -5,27 +5,52 @@ import './NewTaskForm.css';
 export default class NewTaskForm extends Component {
   state = {
     value: '',
+    minutesValue: '',
+    secondsValue: '',
   };
 
   render() {
     const { onAddTask } = this.props;
+    const { value, minutesValue, secondsValue } = this.state;
 
-    const onSubmit = (e) => {
-      e.preventDefault();
-      if (this.state.value.trim()) {
-        onAddTask(this.state.value);
+    this.onKeyboardDown = (e) => {
+      if (
+        e.key === 'Enter' &&
+        value !== '' &&
+        minutesValue !== '' &&
+        secondsValue !== '' &&
+        secondsValue < 60
+      ) {
+        onAddTask(value, minutesValue, secondsValue);
+        this.setState({ value: '', minutesValue: '', secondsValue: '' });
       }
-      this.setState({ value: '' });
     };
 
     return (
-      <form onSubmit={onSubmit} className='new-todo-form"'>
+      <form className="new-todo-form">
         <input
           className="new-todo"
           placeholder="What needs to be done?"
           autoFocus
           onChange={(e) => this.setState({ value: e.target.value })}
-          value={this.state.value}
+          value={value}
+          onKeyDown={this.onKeyboardDown}
+        />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Min"
+          autoFocus
+          value={minutesValue}
+          onChange={(e) => this.setState({ minutesValue: e.target.value })}
+          onKeyDown={this.onKeyboardDown}
+        />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Sec"
+          autoFocus
+          value={secondsValue}
+          onChange={(e) => this.setState({ secondsValue: e.target.value })}
+          onKeyDown={this.onKeyboardDown}
         />
       </form>
     );

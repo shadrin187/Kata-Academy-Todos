@@ -1,13 +1,13 @@
-import PropTypes from "prop-types";
-import "./TasksFilter.css";
+import PropTypes from 'prop-types'
+import './TasksFilter.css'
 
 function TasksFilter({ changeFilterStatus, filterStatus }) {
   return (
     <ul className="filters">
       <li>
         <button
-          onClick={() => changeFilterStatus("All")}
-          className={filterStatus === "All" ? "selected" : null}
+          onClick={() => changeFilterStatus('All')}
+          className={filterStatus === 'All' ? 'selected' : null}
           type="button"
         >
           All
@@ -15,8 +15,8 @@ function TasksFilter({ changeFilterStatus, filterStatus }) {
       </li>
       <li>
         <button
-          onClick={() => changeFilterStatus("Active")}
-          className={filterStatus === "Active" ? "selected" : null}
+          onClick={() => changeFilterStatus('Active')}
+          className={filterStatus === 'Active' ? 'selected' : null}
           type="button"
         >
           Active
@@ -24,8 +24,8 @@ function TasksFilter({ changeFilterStatus, filterStatus }) {
       </li>
       <li>
         <button
-          onClick={() => changeFilterStatus("Completed")}
-          className={filterStatus === "Completed" ? "selected" : null}
+          onClick={() => changeFilterStatus('Completed')}
+          className={filterStatus === 'Completed' ? 'selected' : null}
           type="button"
         >
           Completed
@@ -41,7 +41,7 @@ TasksFilter.propTypes = {
 };
 
 TasksFilter.defaultProps = {
-  filterStatus: "All",
+  filterStatus: 'All',
 };
 
 export default TasksFilter;
