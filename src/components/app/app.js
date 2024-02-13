@@ -100,27 +100,25 @@ export default class App extends Component {
   };
 
   pauseTimer = (id) => {
-    this.setState(({ tasksData }) => {
-      tasksData.map((el) => {
+    this.setState({
+      tasksData: this.state.tasksData.map((el) => {
         if (el.id === id) {
-          el.isPaused = true;
+          el.isPaused = true
         }
-        return el;
-      });
-      // return { tasksData: newArray };
-    });
+        return el
+      }),
+    })
   };
 
   startTimer = (id) => {
-    this.setState(({ tasksData }) => {
-      tasksData.map((el) => {
+    this.setState({
+      tasksData: this.state.tasksData.map((el) => {
         if (el.id === id) {
-          el.isPaused = false;
+          el.isPaused = false
         }
-        return el;
-      });
-      // return { tasksData: newArray };
-    });
+        return el
+      }),
+    })
   };
 
   render() {
