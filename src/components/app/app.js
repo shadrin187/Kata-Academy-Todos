@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 
 import './App.css';
@@ -6,21 +6,11 @@ import TaskList from '../task-list/TaskList';
 import NewTaskForm from '../new-task-form/NewTaskForm';
 import Footer from '../footer/footer';
 
-export default class App extends Component {
-  state = {
-    tasksData: [],
-    filterStatus: 'All',
-  }
+export default function App() {
+  const [tasksData, setTaskData] = useState([]);
+  const [filterStatus, setFilterStatus] = useState('All');
 
-  componentDidMount() {
-    this.timer = setInterval(this.updateTimers, 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
-  onAddTask = (value, minutes, seconds) => {
+  const onAddTask = (value, minutes, seconds) => {
     const task = {
       id: nanoid(),
       description: value,
@@ -30,43 +20,37 @@ export default class App extends Component {
       seconds: Number(seconds),
       isPaused: false,
     };
-    this.setState(({ tasksData }) => ({
-      tasksData: [...tasksData, task],
-    }));
+    setTaskData([...tasksData, task]);
   };
 
-  onDeleteTask = (id) => {
-    this.setState(({ tasksData }) => {
-      const newArray = tasksData.filter((task) => task.id !== id);
-      return { tasksData: newArray };
-    });
+  const onDeleteTask = (id) => {
+    tasksData.filter((task) => task.id !== id);
   };
+  setTaskData;
 
-  onTaskChange = (id, target) => {
-    this.setState(({ tasksData }) => ({
-      tasksData: tasksData.map((element) => {
+  const onTaskChange = (id, target) => {
+    setTaskData(
+      tasksData.map((element) => {
         if (id === element.id) {
           element.checked = target;
         }
         return element;
       }),
-    }));
+    );
   };
 
-  onEditingTask = (id, value) => {
-    this.setState(({ tasksData }) => {
-      const newArray = tasksData.map((task) => {
+  const onEditingTask = (id, value) => {
+    setTaskData(
+      tasksData.map((task) => {
         if (task.id === id) {
           task.description = value;
         }
         return task;
-      });
-      return { tasksData: newArray };
-    });
+      }),
+    );
   };
 
-  filteredTasks = () => {
-    const { tasksData, filterStatus } = this.state;
+  const filteredTasks = () => {
     return tasksData.filter(({ checked }) => {
       const all = filterStatus === 'All';
       const completed = filterStatus === 'Completed';
@@ -74,20 +58,22 @@ export default class App extends Component {
     });
   };
 
-  changeFilterStatus = (newFilterStatus) => {
-    this.setState({ filterStatus: newFilterStatus });
+  const changeFilterStatus = (newFilterStatus) => {
+    setFilterStatus(newFilterStatus);
   };
 
-  onClearCompleted = () => {
-    this.setState(({ tasksData }) => {
-      const newArray = tasksData.filter((task) => !task.checked);
-      return { tasksData: newArray };
-    });
+  const onClearCompleted = () => {
+    setTaskData(tasksData.filter((task) => !task.checked));
   };
 
-  updateTimers = () => {
-    this.setState({
-      tasksData: this.state.tasksData.map((el) => {
+  useEffect(() => {
+    let timer = setInterval(updateTimers, 1000)
+    return () => clearInterval(timer)
+  })
+
+  const updateTimers = () => {
+    setTaskData(
+      tasksData.map((el) => {
         let time = el.minutes * 60 + el.seconds;
         if (!el.isPaused) {
           time += 1;
@@ -96,59 +82,53 @@ export default class App extends Component {
         el.seconds = time % 60;
         return el;
       }),
-    });
-  };
-
-  pauseTimer = (id) => {
-    this.setState({
-      tasksData: this.state.tasksData.map((el) => {
-        if (el.id === id) {
-          el.isPaused = true
-        }
-        return el
-      }),
-    })
-  };
-
-  startTimer = (id) => {
-    this.setState({
-      tasksData: this.state.tasksData.map((el) => {
-        if (el.id === id) {
-          el.isPaused = false
-        }
-        return el
-      }),
-    })
-  };
-
-  render() {
-    const { tasksData } = this.state;
-
-    const leftTasks = tasksData.filter((item) => !item.checked).length;
-
-    return (
-      <section className="todoapp">
-        <header className="header">
-          <h1>Todos</h1>
-          <NewTaskForm onAddTask={this.onAddTask} />
-        </header>
-        <section className="main">
-          <TaskList
-            tasksData={this.filteredTasks()}
-            onDeleteTask={this.onDeleteTask}
-            onTaskChange={this.onTaskChange}
-            onEditingTask={this.onEditingTask}
-            pauseTimer={this.pauseTimer}
-            startTimer={this.startTimer}
-          />
-          <Footer
-            changeFilterStatus={this.changeFilterStatus}
-            onClearCompleted={this.onClearCompleted}
-            leftTasks={leftTasks}
-            filterStatus={this.state.filterStatus}
-          />
-        </section>
-      </section>
     );
-  }
+  };
+
+  const pauseTimer = (id) => {
+    setTaskData(
+      tasksData.map((el) => {
+        if (el.id === id) {
+          el.isPaused = true;
+        }
+        return el;
+      }),
+    );
+  };
+
+  const startTimer = (id) => {
+    setTaskData(
+      tasksData.map((el) => {
+        if (el.id === id) {
+          el.isPaused = false;
+        }
+        return el;
+      }),
+    );
+  };
+
+  return (
+    <section className="todoapp">
+      <header className="header">
+        <h1>Todos</h1>
+        <NewTaskForm onAddTask={onAddTask} />
+      </header>
+      <section className="main">
+        <TaskList
+          tasksData={filteredTasks()}
+          onDeleteTask={onDeleteTask}
+          onTaskChange={onTaskChange}
+          onEditingTask={onEditingTask}
+          pauseTimer={pauseTimer}
+          startTimer={startTimer}
+        />
+        <Footer
+          changeFilterStatus={changeFilterStatus}
+          onClearCompleted={onClearCompleted}
+          leftTasks={tasksData.filter((item) => !item.checked).length}
+          filterStatus={filterStatus}
+        />
+      </section>
+    </section>
+  );
 }

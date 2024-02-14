@@ -42,7 +42,8 @@
         ],
         "newlines-between": "always"
       }
-    ]
+    ],
+    "import/namespace": "off"
   },
   "settings": {
     "import/resolver": {

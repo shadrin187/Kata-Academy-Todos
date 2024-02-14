@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import TasksFilter from '../tasks-filter/TasksFilter'
 import './Footer.css'
 
-function Footer({
+export default function Footer({
   onClearCompleted,
   leftTasks,
   changeFilterStatus,
@@ -33,5 +33,3 @@ Footer.propTypes = {
 Footer.defaultProps = {
   filterStatus: 'All',
 };
-
-export default Footer;
